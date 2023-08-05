@@ -20,11 +20,11 @@ android {
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "io.github.mzdluo123.mirai.android"
+        applicationId = "io.github.mzdluo123.mirai.android.reloaded"
         minSdk = 26
         targetSdk = 33
-        versionCode = 63
-        versionName = "3.3.6"
+        versionCode = 1
+        versionName = "1.0.0"
         buildConfigField("String", "COREVERSION", "\"$CORE_VERSION\"")
         buildConfigField("String", "CONSOLEVERSION", "\"$CONSOLE_VERSION\"")
         buildConfigField("String", "LUAMIRAI_VERSION", "\"$LUAMIRAI_VERSION\"")

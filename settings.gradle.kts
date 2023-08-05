@@ -27,5 +27,5 @@ gradleEnterprise {
     }
 }
 
-rootProject.name="MiraiAndroid"
+rootProject.name = "MiraiAndroid Reloaded"
 include(":app")

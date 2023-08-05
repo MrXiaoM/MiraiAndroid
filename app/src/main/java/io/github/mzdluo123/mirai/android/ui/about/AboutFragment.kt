@@ -61,7 +61,7 @@ class AboutFragment : Fragment() {
             openUrl("https://github.com/mamoe/mirai")
         }
         github2Btn.setOnClickListener {
-            openUrl("https://github.com/MrXiaoM/MiraiAndroid")
+            openUrl("https://github.com/MrXiaoM/MiraiAndroidReloaded")
         }
         btnVisitForum.setOnClickListener {
             openUrl("https://mirai.mamoe.net/")
