@@ -23,11 +23,12 @@ import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.console.plugin.loader.AbstractFilePluginLoader
 import net.mamoe.mirai.console.plugin.loader.PluginLoadException
 import net.mamoe.mirai.console.plugin.name
-import net.mamoe.mirai.console.util.CoroutineScopeUtils.childScope
 import net.mamoe.mirai.utils.MiraiInternalApi
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import net.mamoe.mirai.console.internal.data.MultiFilePluginDataStorageImpl
+import net.mamoe.mirai.console.util.ConsoleExperimentalApi
+import net.mamoe.mirai.utils.childScope
 import java.nio.file.Path
 
 /**
@@ -46,21 +47,23 @@ class DexPluginLoader(val odexPath: String,private val workingDir:Path) :
         }),
     JvmPluginLoader {
 
+    @ConsoleExperimentalApi
     override val configStorage: PluginDataStorage
         get() =MultiFilePluginDataStorageImpl(workingDir.resolve("config"))
 
 
+    @ConsoleExperimentalApi
     override val dataStorage: PluginDataStorage
         get() =MultiFilePluginDataStorageImpl(workingDir.resolve("data"))
 
     @MiraiInternalApi
     override val classLoaders: MutableList<DexPluginClassLoader> = mutableListOf()
 
-    @Suppress("EXTENSION_SHADOWED_BY_MEMBER") // doesn't matter
     override fun getPluginDescription(plugin: JvmPlugin): JvmPluginDescription = plugin.description
 
     private val pluginFileToInstanceMap: MutableMap<File, JvmPlugin> = ConcurrentHashMap()
 
+    @OptIn(ConsoleExperimentalApi::class)
     @MiraiInternalApi
     override fun Sequence<File>.extractPlugins(): List<JvmPlugin> {
         ensureActive()
@@ -143,6 +146,7 @@ class DexPluginLoader(val odexPath: String,private val workingDir:Path) :
         TODO("Not yet implemented")
     }
 
+    @OptIn(ConsoleExperimentalApi::class)
     override fun disable(plugin: JvmPlugin) {
         if (!plugin.isEnabled) error("Plugin '${plugin.name}' is not already disabled and cannot be re-disabled.")
 

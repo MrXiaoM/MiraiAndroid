@@ -3,7 +3,9 @@
     "DEPRECATION_ERROR",
     "OverridingDeprecatedMember",
     "INVISIBLE_REFERENCE",
-    "INVISIBLE_MEMBER"
+    "INVISIBLE_MEMBER",
+    // IDEA sourceSets not contains BuildConfig
+    "UNRESOLVED_REFERENCE"
 )
 
 package io.github.mzdluo123.mirai.android.miraiconsole
@@ -20,6 +22,7 @@ import io.github.mzdluo123.mirai.android.NotificationFactory
 import io.github.mzdluo123.mirai.android.appcenter.trace
 import io.github.mzdluo123.mirai.android.service.BotService
 import io.ktor.client.*
+import io.ktor.client.call.*
 import io.ktor.client.request.*
 import kotlinx.coroutines.*
 import net.mamoe.mirai.Bot
@@ -48,11 +51,12 @@ import net.mamoe.mirai.console.logging.AbstractLoggerController
 import java.nio.file.Path
 import java.nio.file.Paths
 
+@OptIn(ConsoleFrontEndImplementation::class)
 class AndroidMiraiConsole(
     val context: Context,
     rootPath: Path
 ) : MiraiConsoleImplementation,
-    CoroutineScope by CoroutineScope(NamedSupervisorJob("MiraiAndroid") + CoroutineExceptionHandler { _, throwable ->
+    CoroutineScope by CoroutineScope(CoroutineName("MiraiAndroid") + CoroutineExceptionHandler { _, throwable ->
         Log.e("MiraiAndroid", "发生异常")
         logException(throwable)
     }
@@ -70,14 +74,18 @@ class AndroidMiraiConsole(
     private var sendOfflineMsgJob: Job? = null
 
 
+    @ConsoleFrontEndImplementation
     override val commandManager: CommandManager
         get() = CommandManagerImpl(coroutineContext)
 
+    @ConsoleFrontEndImplementation
     override val rootPath: Path = Paths.get(context.getExternalFilesDir("")!!.absolutePath)
-
-
-    override fun createLogger(identity: String?): MiraiLogger = MiraiAndroidLogger
-
+    @OptIn(ConsoleFrontEndImplementation::class)
+    override fun createLoggerFactory(context: MiraiConsoleImplementation.FrontendLoggingInitContext): MiraiLogger.Factory {
+        return object:MiraiLogger.Factory {
+            override fun create(requester: Class<*>, identity: String?): MiraiLogger = MiraiAndroidLogger
+        }
+    }
 
     override fun createLoginSolver(
         requesterBot: Long,
@@ -97,13 +105,6 @@ class AndroidMiraiConsole(
 
     override val consoleCommandSender: MiraiConsoleImplementation.ConsoleCommandSenderImpl =
         AndroidConsoleCommandSenderImpl
-    override val consoleDataScope: MiraiConsoleImplementation.ConsoleDataScope
-        get() = MiraiConsoleImplementation.ConsoleDataScope.createDefault(
-            coroutineContext,
-            this.dataStorageForJvmPluginLoader,
-            this.configStorageForBuiltIns
-        )
-
 
     override val consoleInput: ConsoleInput
         get() = AndroidConsoleInput
@@ -128,7 +129,15 @@ class AndroidMiraiConsole(
     override val configStorageForBuiltIns: PluginDataStorage =
         MultiFilePluginDataStorage(rootPath.resolve("config"))
 
-    @OptIn(ConsoleExperimentalApi::class, ConsoleInternalApi::class)
+    @OptIn(ConsoleExperimentalApi::class)
+    override val consoleDataScope: MiraiConsoleImplementation.ConsoleDataScope =
+        MiraiConsoleImplementation.ConsoleDataScope.createDefault(
+            coroutineContext,
+            this.dataStorageForJvmPluginLoader,
+            this.configStorageForBuiltIns
+        )
+
+    @OptIn(ConsoleExperimentalApi::class)
     override val loggerController: LoggerController =  object : LoggerController {
         override fun shouldLog(
             identity: String?,
@@ -211,8 +220,7 @@ class AndroidMiraiConsole(
     private suspend fun downloadAvatar(bot: Bot): Bitmap =
         try {
 //            bot.logger.info("正在加载头像....")
-
-            HttpClient().get<ByteArray>(bot.avatarUrl).let { avatarData ->
+            HttpClient().get(bot.avatarUrl).body<ByteArray>().let { avatarData ->
                 BitmapFactory.decodeByteArray(avatarData, 0, avatarData.size)
             }
         } catch (e: Exception) {
