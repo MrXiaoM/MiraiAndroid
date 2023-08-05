@@ -10,10 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import io.github.mzdluo123.mirai.android.R
-import kotlinx.android.synthetic.main.fragment_plugin.*
 import java.io.File
 
 
@@ -26,6 +26,8 @@ class PluginFragment : Fragment() {
         const val SELECT_RESULT_CODE = 1
     }
 
+    private lateinit var plugin_recycler: RecyclerView
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,6 +36,11 @@ class PluginFragment : Fragment() {
         pluginViewModel =
             ViewModelProvider(this).get(PluginViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_plugin, container, false)
+
+        if (container == null) return null
+
+        plugin_recycler = root.findViewById(R.id.plugin_recycler)
+
         setHasOptionsMenu(true)
         adapter = PluginsAdapter()
 

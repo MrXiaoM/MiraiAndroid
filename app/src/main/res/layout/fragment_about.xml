@@ -130,7 +130,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
             <Button
-                android:id="@+id/github2_bth"
+                android:id="@+id/github2_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"

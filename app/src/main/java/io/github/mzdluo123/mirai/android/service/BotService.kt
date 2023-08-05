@@ -44,6 +44,7 @@ import net.mamoe.mirai.event.GlobalEventChannel
 import net.mamoe.mirai.event.events.BotOnlineEvent
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.utils.MiraiLogger
+import splitties.experimental.ExperimentalSplittiesApi
 import java.nio.file.Paths
 import kotlin.system.exitProcess
 
@@ -163,6 +164,7 @@ class BotService : LifecycleService() {
 //        }
     }
 
+    @OptIn(ExperimentalSplittiesApi::class, ExperimentalUnsignedTypes::class)
     @ConsoleFrontEndImplementation
     @SuppressLint("WakelockTimeout")
     private fun startConsole(intent: Intent?) {

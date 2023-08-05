@@ -9,12 +9,12 @@ import android.webkit.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.gson.JsonParser
 import io.github.mzdluo123.mirai.android.R
 import io.github.mzdluo123.mirai.android.appcenter.trace
 import io.github.mzdluo123.mirai.android.miraiconsole.AndroidLoginSolver
 import io.github.mzdluo123.mirai.android.service.ServiceConnector
-import kotlinx.android.synthetic.main.activity_unsafe_login.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import splitties.toast.toast
@@ -27,18 +27,23 @@ class UnsafeLoginActivity : AppCompatActivity() {
     companion object {
         const val TAG = "UnsafeLogin"
     }
-
+    private lateinit var refreshUnsafeWeb: SwipeRefreshLayout
+    private lateinit var unsafeLoginWeb: WebView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         conn = ServiceConnector(this)
         lifecycle.addObserver(conn)
         setContentView(R.layout.activity_unsafe_login)
+
+        refreshUnsafeWeb = findViewById(R.id.refresh_unsafe_web)
+        unsafeLoginWeb = findViewById(R.id.unsafe_login_web)
+
         initWebView()
-        refresh_unsafe_web.setOnRefreshListener {
-            unsafe_login_web.reload()
+        refreshUnsafeWeb.setOnRefreshListener {
+            unsafeLoginWeb.reload()
             lifecycleScope.launch {
                 delay(1000)
-                refresh_unsafe_web.isRefreshing = false
+                refreshUnsafeWeb.isRefreshing = false
             }
         }
         //  Toast.makeText(this, "请在完成验证后点击右上角继续登录", Toast.LENGTH_LONG).show()
@@ -47,7 +52,7 @@ class UnsafeLoginActivity : AppCompatActivity() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebView() {
-        unsafe_login_web.webViewClient = object : WebViewClient() {
+        unsafeLoginWeb.webViewClient = object : WebViewClient() {
 //            override fun shouldInterceptRequest(
 //                view: WebView?,
 //                request: WebResourceRequest?
@@ -62,14 +67,14 @@ class UnsafeLoginActivity : AppCompatActivity() {
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                unsafe_login_web.evaluateJavascript(
+                unsafeLoginWeb.evaluateJavascript(
                     """
                     mqq.invoke = function(a,b,c){ return bridge.invoke(a,b,JSON.stringify(c))}"""
                         .trimIndent()
                 ) {}
             }
         }
-        unsafe_login_web.webChromeClient = object : WebChromeClient() {
+        unsafeLoginWeb.webChromeClient = object : WebChromeClient() {
 
             override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
                 val msg = consoleMessage?.message()
@@ -81,11 +86,11 @@ class UnsafeLoginActivity : AppCompatActivity() {
             }
         }
         WebView.setWebContentsDebuggingEnabled(true)
-        unsafe_login_web.settings.apply {
+        unsafeLoginWeb.settings.apply {
             javaScriptEnabled = true
             domStorageEnabled = true
         }
-        unsafe_login_web.addJavascriptInterface(Bridge(), "bridge")
+        unsafeLoginWeb.addJavascriptInterface(Bridge(), "bridge")
 
         conn.connectStatus.observe(this, Observer {
             if (it) {
@@ -95,7 +100,7 @@ class UnsafeLoginActivity : AppCompatActivity() {
                     return@Observer
 
                 }
-                unsafe_login_web.loadUrl(conn.botService.url.replace("verify", "qrcode"))
+                unsafeLoginWeb.loadUrl(conn.botService.url.replace("verify", "qrcode"))
             }
         })
     }
@@ -112,8 +117,8 @@ class UnsafeLoginActivity : AppCompatActivity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (unsafe_login_web.canGoBack()) {
-                unsafe_login_web.goBack()
+            if (unsafeLoginWeb.canGoBack()) {
+                unsafeLoginWeb.goBack()
                 return true
             }
         }

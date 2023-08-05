@@ -16,7 +16,9 @@ import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ScrollView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
@@ -30,7 +32,6 @@ import io.github.mzdluo123.mirai.android.IConsole
 import io.github.mzdluo123.mirai.android.R
 import io.github.mzdluo123.mirai.android.service.ServiceConnector
 import io.github.mzdluo123.mirai.android.utils.shareText
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -44,10 +45,15 @@ class ConsoleFragment : Fragment() {
         const val TAG = "ConsoleFragment"
     }
 
-
     lateinit var conn: ServiceConnector
 
     private var autoScroll = true
+
+    private lateinit var mainScroll: ScrollView
+    private lateinit var commandsendBtn: ImageButton
+    private lateinit var shortcutbottomBtn: ImageButton
+    private lateinit var logText: TextView
+    private lateinit var commandInput: EditText
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,6 +63,13 @@ class ConsoleFragment : Fragment() {
         conn = ServiceConnector(requireContext())
         lifecycle.addObserver(conn)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
+
+        mainScroll = root.findViewById(R.id.main_scroll)
+        commandsendBtn = root.findViewById(R.id.commandSend_btn)
+        shortcutbottomBtn = root.findViewById(R.id.shortcutBottom_btn)
+        logText = root.findViewById(R.id.log_text)
+        commandInput = root.findViewById(R.id.command_input)
+
         setHasOptionsMenu(true)
         return root
     }
@@ -64,27 +77,27 @@ class ConsoleFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        commandSend_btn.setOnClickListener {
+        commandsendBtn.setOnClickListener {
             submitCmd()
         }
-        shortcutBottom_btn.setOnClickListener {
+        shortcutbottomBtn.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 if (autoScroll) {
                     autoScroll = false
                     toast("自动滚动禁用")
-                    shortcutBottom_btn.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp)
+                    shortcutbottomBtn.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp)
                 } else {
                     autoScroll = true
                     toast("自动滚动启用")
-                    shortcutBottom_btn.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
+                    shortcutbottomBtn.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
                 }
 
             }
         }
         if (AppSettings.waitingDebugger && conn.connectStatus.value == false) {
-            log_text.text = "正在等待调试器链接,PID见日志....."
+            logText.text = "正在等待调试器链接,PID见日志....."
         }
-        command_input.setOnEditorActionListener { _, actionId, _ ->
+        commandInput.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEND) {
                 submitCmd()
             }
@@ -94,15 +107,15 @@ class ConsoleFragment : Fragment() {
         conn.registerConsole(object : IConsole.Stub() {
             override fun newLog(log: String) {
                 viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                    log_text.append("\n")
+                    logText.append("\n")
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        log_text?.append(Html.fromHtml(log, Html.FROM_HTML_MODE_COMPACT))
+                        logText?.append(Html.fromHtml(log, Html.FROM_HTML_MODE_COMPACT))
                     } else {
-                        log_text?.append(Html.fromHtml(log))
+                        logText?.append(Html.fromHtml(log))
                     }
                     if (autoScroll) {
                         delay(20)
-                        main_scroll.fullScroll(ScrollView.FOCUS_DOWN)
+                        mainScroll.fullScroll(ScrollView.FOCUS_DOWN)
                     }
                 }
             }
@@ -115,13 +128,13 @@ class ConsoleFragment : Fragment() {
                     val text = conn.botService.log.joinToString(separator = "<br>")
                     withContext(Dispatchers.Main) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            log_text?.text = Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT)
+                            logText?.text = Html.fromHtml(text, Html.FROM_HTML_MODE_COMPACT)
                         } else {
-                            log_text?.text = Html.fromHtml(text)
+                            logText?.text = Html.fromHtml(text)
                         }
                         if (autoScroll) {
                             delay(20)
-                            main_scroll.fullScroll(ScrollView.FOCUS_DOWN)
+                            mainScroll.fullScroll(ScrollView.FOCUS_DOWN)
                         }
                     }
                 }
@@ -153,7 +166,7 @@ class ConsoleFragment : Fragment() {
                 }, lifecycleScope
             )
             R.id.action_clean -> {
-                log_text.text = ""
+                logText.text = ""
                 conn.botService.clearLog()
             }
 
@@ -190,7 +203,7 @@ class ConsoleFragment : Fragment() {
     }
 
     private fun submitCmd() {
-        var command = command_input.text.toString()
+        var command = commandInput.text.toString()
 
             if (!command.startsWith("/")) {
                 command = "/$command"
@@ -199,7 +212,7 @@ class ConsoleFragment : Fragment() {
                 lifecycleScope.launch(Dispatchers.Default) {
                     conn.botService.runCmd(command)
                 }
-                command_input.text.clear()
+                commandInput.text.clear()
             } catch (e: DeadObjectException) {
                 toast("服务状态异常，请在菜单内点击快速重启")
         }

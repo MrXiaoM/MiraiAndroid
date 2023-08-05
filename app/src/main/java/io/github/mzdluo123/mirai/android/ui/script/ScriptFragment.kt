@@ -12,11 +12,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import io.github.mzdluo123.mirai.android.R
 import io.github.mzdluo123.mirai.android.script.ScriptManager
 import io.github.mzdluo123.mirai.android.service.ServiceConnector
 import io.github.mzdluo123.mirai.android.utils.askFileName
-import kotlinx.android.synthetic.main.fragment_script.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -38,6 +38,8 @@ class ScriptFragment : Fragment() {
     }
 
     private lateinit var botServiceConnection: ServiceConnector
+
+    private lateinit var script_recycler: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,7 +73,11 @@ class ScriptFragment : Fragment() {
             }
             menu.show()
         }
-        return inflater.inflate(R.layout.fragment_script, container, false)
+        val root = inflater.inflate(R.layout.fragment_script, container, false)
+
+        script_recycler = root.findViewById(R.id.script_recycler)
+
+        return root
     }
 
 

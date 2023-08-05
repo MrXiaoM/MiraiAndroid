@@ -32,12 +32,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="上传并分享错误报告"
-                app:layout_constraintEnd_toEndOf="@+id/crach_data_text"
-                app:layout_constraintStart_toStartOf="@+id/crach_data_text"
+                app:layout_constraintEnd_toEndOf="@+id/crash_data_text"
+                app:layout_constraintStart_toStartOf="@+id/crash_data_text"
                 app:layout_constraintTop_toBottomOf="@+id/textView15" />
 
             <TextView
-                android:id="@+id/crach_data_text"
+                android:id="@+id/crash_data_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="TextView"

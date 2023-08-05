@@ -2,6 +2,8 @@ package io.github.mzdluo123.mirai.android.activity
 
 import android.net.Uri
 import android.os.Bundle
+import android.widget.CheckBox
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +16,6 @@ import io.github.mzdluo123.mirai.android.databinding.ActivityPluginImportBinding
 import io.github.mzdluo123.mirai.android.ui.plugin.PluginViewModel
 import io.github.mzdluo123.mirai.android.utils.askFileName
 import io.github.mzdluo123.mirai.android.utils.copyToFileDir
-import kotlinx.android.synthetic.main.activity_plugin_import.*
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,9 +30,15 @@ class PluginImportActivity : AppCompatActivity() {
     private lateinit var pluginViewModel: PluginViewModel
     private lateinit var dialog: AlertDialog
     private lateinit var activityPluginImportBinding: ActivityPluginImportBinding
+
+    private lateinit var importRadiogroup: RadioGroup
+    private lateinit var desugaringCheckbox: CheckBox
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plugin_import)
+
+        importRadiogroup = findViewById(R.id.import_radioGroup)
+        desugaringCheckbox = findViewById(R.id.desugaring_checkBox)
 //        uri = Uri.parse(intent.getStringExtra("uri"))
 
 //        val errorHandel = CoroutineExceptionHandler { _, e ->
@@ -81,7 +88,7 @@ class PluginImportActivity : AppCompatActivity() {
 
 
         dialog.show()
-        when (import_radioGroup.checkedRadioButtonId) {
+        when (importRadiogroup.checkedRadioButtonId) {
             R.id.compile_radioButton -> {
                 lifecycleScope.launch(exceptionHandler) {
                     val name = withContext(Dispatchers.Main) {
@@ -98,7 +105,7 @@ class PluginImportActivity : AppCompatActivity() {
                     // 编译插件
                     pluginViewModel.compilePlugin(
                         File(baseContext.getExternalFilesDir(null), name),
-                        desugaring_checkBox.isChecked
+                        desugaringCheckbox.isChecked
                     )
                     // 删除缓存
                     withContext(Dispatchers.IO) {

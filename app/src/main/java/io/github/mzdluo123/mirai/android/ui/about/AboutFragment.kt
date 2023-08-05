@@ -6,46 +6,64 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import io.github.mzdluo123.mirai.android.BuildConfig
 import io.github.mzdluo123.mirai.android.R
 import io.github.mzdluo123.mirai.android.databinding.FragmentAboutBinding
-import kotlinx.android.synthetic.main.fragment_about.*
-import splitties.toast.toast
 
 class AboutFragment : Fragment() {
     private lateinit var aboutBinding: FragmentAboutBinding
     private var click = 0
+    private lateinit var githubBtn: Button
+    private lateinit var github2Btn: Button
+    private lateinit var btnVisitForum: Button
+    private lateinit var btnJoinGroup: Button
+    private lateinit var imageView2: ImageView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val aboutBinding = DataBindingUtil.inflate<FragmentAboutBinding>(
+        aboutBinding = DataBindingUtil.inflate(
             layoutInflater,
             R.layout.fragment_about,
             container,
             false
         )
+        @Suppress("DEPRECATION")
         aboutBinding.appVersion = requireContext().packageManager.getPackageInfo(
             requireContext().packageName,
             0
         ).versionName
-        aboutBinding.coreVersion = BuildConfig.COREVERSION
-        aboutBinding.consoleVersion = BuildConfig.CONSOLEVERSION
-        return aboutBinding.root
+        val root = aboutBinding.root
+
+        githubBtn = root.findViewById(R.id.github_btn)
+        github2Btn = root.findViewById(R.id.github2_btn)
+        btnVisitForum = root.findViewById(R.id.btn_visit_forum)
+        btnJoinGroup = root.findViewById(R.id.btn_join_group)
+        imageView2 = root.findViewById(R.id.imageView2)
+
+        @Suppress("UNRESOLVED_REFERENCE")
+        aboutBinding.coreVersion = io.github.mzdluo123.mirai.android.BuildConfig.COREVERSION
+        @Suppress("UNRESOLVED_REFERENCE")
+        aboutBinding.consoleVersion = io.github.mzdluo123.mirai.android.BuildConfig.CONSOLEVERSION
+        return root
     }
 
+    @Suppress("DEPRECATION")
+    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        github_btn.setOnClickListener {
+        githubBtn.setOnClickListener {
             openUrl("https://github.com/mamoe/mirai")
         }
-        github2_bth.setOnClickListener {
-            openUrl("https://github.com/mzdluo123/MiraiAndroid")
+        github2Btn.setOnClickListener {
+            openUrl("https://github.com/MrXiaoM/MiraiAndroid")
         }
-        btn_visit_forum.setOnClickListener {
+        btnVisitForum.setOnClickListener {
             openUrl("https://mirai.mamoe.net/")
         }
         imageView2.setOnClickListener {
@@ -55,9 +73,9 @@ class AboutFragment : Fragment() {
             }
             imageView2.setImageResource(R.drawable.avatar)
         }
-        btn_join_group.setOnClickListener {
-            if (!joinQQGroup("df6wSbKtDBo3cMJ9ULtYAZeln5ZZuA9d")) {
-                toast("拉起QQ失败，请确认你是否安装了QQ")
+        btnJoinGroup.setOnClickListener {
+            if (!joinQQGroup("dHC-0eWzcLSivNoevCngF4E4UYXcBgbS")) {
+                Toast.makeText(it.context, "拉起QQ失败，请确认你是否安装了QQ", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -70,8 +88,8 @@ class AboutFragment : Fragment() {
 
     /****************
      *
-     * 发起添加群流程。群号：MiraiAndroid(206073050) 的 key 为： 2aqIV-MkAOvx53dwUl-VVUYZqn8UrFAJ
-     * 调用 joinQQGroup(2aqIV-MkAOvx53dwUl-VVUYZqn8UrFAJ) 即可发起手Q客户端申请加群 MiraiAndroid(206073050)
+     * 发起添加群流程。群号：Mirai&amp;nbsp;Developers&amp;nbsp;猫猫开发(1047497524) 的 key 为： dHC-0eWzcLSivNoevCngF4E4UYXcBgbS
+     * 调用 joinQQGroup(dHC-0eWzcLSivNoevCngF4E4UYXcBgbS) 即可发起手Q客户端申请加群 Mirai&amp;nbsp;Developers&amp;nbsp;猫猫开发(1047497524)
      *
      * @param key 由官网生成的key
      * @return 返回true表示呼起手Q成功，返回false表示呼起失败

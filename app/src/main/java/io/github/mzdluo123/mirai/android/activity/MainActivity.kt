@@ -2,7 +2,10 @@ package io.github.mzdluo123.mirai.android.activity
 
 import android.os.Build
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -11,6 +14,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
+import com.google.android.material.navigation.NavigationView
 import dalvik.system.DexFile
 import io.github.mzdluo123.mirai.android.AppSettings
 import io.github.mzdluo123.mirai.android.BotApplication
@@ -18,8 +22,6 @@ import io.github.mzdluo123.mirai.android.NotificationFactory
 import io.github.mzdluo123.mirai.android.R
 import io.github.mzdluo123.mirai.android.appcenter.trace
 import io.github.mzdluo123.mirai.android.utils.shareText
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -57,11 +59,23 @@ class MainActivity : AppCompatActivity() {
     private val navController: NavController by lazy {
         findNavController(R.id.nav_host_fragment)
     }
+    private lateinit var drawer_layout: DrawerLayout
+    private lateinit var nav_view: NavigationView
+    private lateinit var btn_exit: Button
+    private lateinit var btn_reboot: Button
 
+    private lateinit var toolbar: Toolbar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.AppTheme_NoActionBar)
         setContentView(R.layout.activity_main)
+
+        drawer_layout = findViewById(R.id.drawer_layout)
+        nav_view = findViewById(R.id.nav_view)
+        btn_exit = findViewById(R.id.btn_exit)
+        btn_reboot = findViewById(R.id.btn_reboot)
+        toolbar = findViewById(R.id.toolbar)
+
         setSupportActionBar(toolbar)
         setupActionBarWithNavController(navController, appBarConfiguration)
         nav_view.setupWithNavController(navController)

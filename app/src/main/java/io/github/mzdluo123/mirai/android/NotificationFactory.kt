@@ -48,7 +48,7 @@ object NotificationFactory {
             )
                 .setName("离线通知")
                 .setDescription("Mirai因各种原因离线的通知")
-
+        @Suppress("UNRESOLVED_REFERENCE")
         if (BuildConfig.DEBUG) {
             offlineChannel.setImportance(NotificationManagerCompat.IMPORTANCE_MIN)
             captchaChannel.setImportance(NotificationManagerCompat.IMPORTANCE_MIN)
@@ -89,7 +89,7 @@ object NotificationFactory {
                     context,
                     0,
                     Intent(context, MainActivity::class.java),
-                    0
+                    PendingIntent.FLAG_IMMUTABLE
                 )
             )
             .setContentTitle("MiraiAndroid") //创建通知
