@@ -25,7 +25,9 @@ import org.acra.ACRA
 import org.acra.config.CoreConfigurationBuilder
 import org.acra.config.DialogConfigurationBuilder
 import org.acra.data.StringFormat
+import org.bouncycastle.jce.provider.BouncyCastleProvider
 import splitties.init.injectAsAppCtx
+import java.security.Security
 
 
 class BotApplication : Application() {
@@ -38,6 +40,15 @@ class BotApplication : Application() {
         val json = lazy { Json.Default }
     }
 
+    private fun setUpECDHEnvironment() {
+        val provider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME)
+        if (provider != null) {
+            if (provider.javaClass != BouncyCastleProvider::class.java) {
+                Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME)
+                Security.insertProviderAt(BouncyCastleProvider(), 1)
+            }
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -56,6 +67,7 @@ class BotApplication : Application() {
         if (processName?.isEmpty() == false && processName == packageName) {
             initNotification()
         }
+        setUpECDHEnvironment()
     }
 
     private fun initAppCenter() {
