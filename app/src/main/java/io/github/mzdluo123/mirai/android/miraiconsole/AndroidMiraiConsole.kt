@@ -75,8 +75,7 @@ class AndroidMiraiConsole(
 
 
     @ConsoleFrontEndImplementation
-    override val commandManager: CommandManager
-        get() = CommandManagerImpl(coroutineContext)
+    override val commandManager: CommandManager = CommandManagerImpl(coroutineContext)
 
     @ConsoleFrontEndImplementation
     override val rootPath: Path = Paths.get(context.getExternalFilesDir("")!!.absolutePath)
@@ -106,8 +105,7 @@ class AndroidMiraiConsole(
     override val consoleCommandSender: MiraiConsoleImplementation.ConsoleCommandSenderImpl =
         AndroidConsoleCommandSenderImpl
 
-    override val consoleInput: ConsoleInput
-        get() = AndroidConsoleInput
+    override val consoleInput: ConsoleInput = AndroidConsoleInput
 
 
     @OptIn(ConsoleExperimentalApi::class)
