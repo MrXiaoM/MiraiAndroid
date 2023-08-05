@@ -1,6 +1,8 @@
 // IbotAidlInterface.aidl
 package io.github.mzdluo123.mirai.android;
 
+import io.github.mzdluo123.mirai.android.IConsole;
+
 // Declare any non-default types here with import statements
 interface IbotAidlInterface {
     //Console
@@ -29,7 +31,4 @@ interface IbotAidlInterface {
     void registerConsole(in IConsole instance);
     void unregisterConsole(in IConsole instance);
 
-}
-interface IConsole{
-    void newLog(String log);
 }
