@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Process
+import android.os.StrictMode
 import com.fanjun.keeplive.KeepLive
 import com.fanjun.keeplive.config.ForegroundNotification
 import com.fanjun.keeplive.config.KeepLiveService
@@ -68,6 +69,12 @@ class BotApplication : Application() {
             initNotification()
         }
         setUpECDHEnvironment()
+
+        // 修复 Maven Resolver 无法初始化
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            val policy = StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
     }
 
     private fun initAppCenter() {

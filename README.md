@@ -20,7 +20,7 @@
 </div>
 
 
-# MiraiAndroid
+# MiraiAndroid Reloaded
 
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mzdluo123/MiraiAndroid/Android%20Build?style=flat-square&logo=github)](https://github.com/mzdluo123/MiraiAndroid/actions)
 [![Release](https://img.shields.io/github/v/release/mzdluo123/MiraiAndroid?style=flat-square&color=orange&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAMAAABHPGVmAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAxQTFRFOqTdPpDDDjdWAAAA01db/wAAAAR0Uk5T////AEAqqfQAAAGRSURBVHja7NrRTsMwEETRO+v//2cKQtDSNNm1PSuE8Ht0FOcpM8NoOPwpJM6P5g/yI/gRsCNgR8COgB0BOwJ2BOwI2BGwI2BHwI6AHQE7AnYE7AjYEbAjYEfAjoAdATsCdgTsCNgRsCNgR8COgB2BdiTkRxQlZQq5GbdnzMi7McKLfBhjyIkoPv805UMU8fU/a0O+jfRnKSN3RvrCqojiIQCQA1HEj5jBgPw0cp+lhjwZuQsrIQdGSqkgiuP0ZyeiOEZiJ/LCSFxYHnlpXF9YFpHiLJTb9CZnxlAHcqGkkasUcwdynZV2IFpHErHvciKRC5c7kLGGJHPyWEHSabzmkUrmP4vUmoUORHNIsSSZCjrrVUwHMurIRKtUDp+nuivVkNmGrILM93AdiPLIQqWY7k/WissOZOSQxQ421WktN726Rnb0yR3IuEK2VOM6RzYV8Ke17L6avwMZr5GNi4WXVfnWXYSOkd3riw4kjpDtQxI9I4a5ytPawzOKeURc05t7xLXvkTq2RC3I+Ed+KfImwADzdEfKPNJbbAAAAABJRU5ErkJggg==&logoWidth=12)](https://github.com/mzdluo123/MiraiAndroid/releases)
@@ -30,7 +30,17 @@ MiraiAndroid 是 基于 [Mirai](https://github.com/mamoe/mirai) 的 QQ 机器人
 
 相比使用 `Termux` 或者是 `Linux Deploy` 等部署并运行 [Mirai](https://github.com/mamoe/mirai) 的方案， MiraiAndroid 提供了更好的性能、更少的资源占用，以及更方便的操作界面。
 
-最新的构建版本你可以到 [appcenter](https://install.appcenter.ms/users/mzdluo123/apps/miraiandroid/distribution_groups/release) 内找到。
+~~最新的构建版本你可以到 [appcenter](https://install.appcenter.ms/users/mzdluo123/apps/miraiandroid/distribution_groups/release) 内找到。~~
+
+## Work In Progress
+
+重制版正在编写中
+
+- [x] 兼容新版本 mirai-console 接口
+- [x] 支持下载 mirai2 格式插件的依赖
+- [ ] 自动使用 d8 编译下载的依赖
+- [ ] 修改原有 URLClassLoader 为 DexClassLoader
+
 ## 声明
 
 ### 一切开发旨在学习，请勿用于非法用途

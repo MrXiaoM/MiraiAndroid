@@ -62,8 +62,10 @@ class AndroidMiraiConsole(
     }
     ) {
 
-    val loginSolver =
-        AndroidLoginSolver(context)
+    init {
+        System.setProperty("mirai.console.skip-end-user-readme", "true")
+    }
+    val loginSolver = AndroidLoginSolver(context)
 
     // 使用一个[60s/refreshPerMinute]的数组存放每4秒消息条数
     // 读取时增加最新一分钟，减去最老一分钟

@@ -10,7 +10,7 @@ plugins {
     id("com.github.johnrengelman.shadow")
 }
 
-val MIRAI_VERSION = "2.15.0"
+val MIRAI_VERSION = "2.16.0"
 val CORE_VERSION = MIRAI_VERSION
 val CONSOLE_VERSION = MIRAI_VERSION
 val LUAMIRAI_VERSION = "2.0.8"
@@ -176,9 +176,6 @@ dependencies {
     implementation("net.mamoe.yamlkt:yamlkt:0.12.0")
     implementation("com.moandjiezana.toml:toml4j:0.7.2")
 
-    //okhttp3
-    implementation("com.squareup.okhttp3:okhttp:4.10.0")
-
     //test
     implementation("androidx.test.espresso:espresso-idling-resource:3.5.1")
 
@@ -199,10 +196,24 @@ dependencies {
     implementation("net.mamoe:mirai-console:${CONSOLE_VERSION}")
 
     // Ktor
+    // 注意, 不要轻易升级 ktor 版本. 阅读 [RelocationNotes], 尤其是间接依赖部分.
     implementation("io.ktor:ktor:2.1.0")
     implementation("io.ktor:ktor-http:2.1.0")
     implementation("io.ktor:ktor-client-core:2.1.0")
     implementation("io.ktor:ktor-client-android:2.1.0")
+
+    //okhttp3
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+
+    // Maven Resolver
+    implementation("org.apache.maven.resolver:maven-resolver-api:1.7.3")
+    implementation("org.apache.maven.resolver:maven-resolver-impl:1.7.3")
+    implementation("org.apache.maven.resolver:maven-resolver-connector-basic:1.7.3")
+    implementation("org.apache.maven.resolver:maven-resolver-transport-http:1.7.3")
+    implementation("org.apache.maven:maven-resolver-provider:3.8.5")
+
+    // 在 Android 中兼容 Maven Resolver
+    implementation("cz.msebera.android:httpclient:4.5.8")
 
     "nnio"("com.github.rtm516:nnio:c7b291f4ca")
     implementation(nnioJar.get().outputs.files)
